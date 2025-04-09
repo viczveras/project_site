@@ -1,6 +1,8 @@
 from flask import render_template
-from fakeinterest import app
+from fakeinterest import app, database, bcrypt
 from flask_login import login_required
+from flask_bcrypt import Bcrypt
+from fakeinterest.models import Usuarios, Posts
 from fakeinterest.forms import Form_Login, Form_Criar_Conta
 
 
@@ -18,10 +20,16 @@ def home():
     
 
 
-@app.route('/criarconta',  methods=['GET', 'POST'])
+@app.route('/criarconta', methods=['GET', 'POST'])
 def criar_conta():
     formcriarconta = Form_Criar_Conta()
-    return render_template("criarconta.html", form = formcriarconta)
+    if formcriarconta.validate_on_submit():
+        senha = bcrypt.generate_password_hash(formcriarconta.senha.data).decode('utf-8')
+        usuario = Usuarios(username=formcriarconta.username.data, senha=senha, email=formcriarconta.email.data)
+        database.session.add(usuario)
+        database.session.commit()
+    return render_template("criarconta.html", form=formcriarconta)
+
     
 
 
