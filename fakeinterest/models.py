@@ -7,9 +7,9 @@ from flask_login import UserMixin
 # def que carrega o usuário
 @login_manager.user_loader
 def load_user(id_usuario):
-    return Usuario.query.get(int(id_usuario))
+    return Usuarios.query.get(int(id_usuario))
 
-class Usuario(database.Model, UserMixin):
+class Usuarios(database.Model, UserMixin):
     id = database.Column(database.Integer, primary_key=True)
     username = database.Column(database.String, nullable=False, unique=True)
     email = database.Column(database.String, nullable=False, unique=True)

@@ -12,6 +12,16 @@
 {% block body %}
 <body>
     <h3>Olá, bem-vindo ao meu site!</h3>
+
+{% block formulario %}
+    <form method="POST">
+        {{form.csrf_token}}
+
+        {{ form.email.label }} {{ form.email() }}
+        {{ form.senha.label }} {{ form.senha() }}
+        {{ form.confirm_button }}
+    </form>
+    {% endblock %}
 </body>
-{% endblock %}
+{%endblock%}
 </html>

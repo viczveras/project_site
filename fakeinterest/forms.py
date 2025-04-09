@@ -1,16 +1,14 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField,PasswordField,SubmitField
+from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
-from fakeinterest import Usuario
+from fakeinterest.models import Usuarios
 
-class Form_Login():
-    email = StringField('E-mail', validators=[DataRequired(),Email()])
-    senha = PasswordField('Senha', validators=[DataRequired])
-    confirm_button= SubmitField("Fazer Login")
+class Form_Login(FlaskForm):
+    email = StringField('E-mail', validators=[DataRequired(), Email()])
+    senha = PasswordField('Senha', validators=[DataRequired()])
+    confirm_button = SubmitField("Fazer Login")
 
-
-
-class Form_Criar_Conta():
+class Form_Criar_Conta(FlaskForm):
     username = StringField("Usuário", validators=[DataRequired()])
     email = StringField("E-mail", validators=[DataRequired(), Email()])
     senha = PasswordField('Senha', validators=[DataRequired(), Length(6,20)])
@@ -18,10 +16,6 @@ class Form_Criar_Conta():
     confirm_button = SubmitField("Criar conta")
 
     def validate_email(self, email):
-
-        usuario = Usuario.query.filter_by(email=email.data).first() # lista de usuários com email igual ao deste usuário
-
+        usuario = Usuarios.query.filter_by(email=email.data).first()
         if usuario:
-            return ValidationError("E-mail já cadastrado.")
-        
-
+            raise ValidationError("E-mail já cadastrado.")
