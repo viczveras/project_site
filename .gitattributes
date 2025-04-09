@@ -1,7 +1,0 @@
-# Auto detect text files and perform LF normalization
-<<<<<<< HEAD
-.venv
-.gitattibutes
-=======
-* text=auto
->>>>>>> b8c11aaec84cf466e9dfc844553f82f5663af05e
