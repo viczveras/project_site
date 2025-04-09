@@ -1,0 +1,4 @@
+.venv
+.gitattibutes
+__pycache__/
+*.pyc
