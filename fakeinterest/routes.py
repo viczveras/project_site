@@ -14,7 +14,7 @@ def home():
          usuario = Usuarios.query.filter_by(email=formlogin.email.data).first()
          if usuario and bcrypt.check_password_hash(usuario.senha, formlogin.senha.data):
              login_user(usuario)
-             return redirect(url_for("perfil", usuario=usuario.username))
+             return redirect(url_for("perfil", id_usuario=usuario.id))
     return render_template('index.html', form = formlogin)
 
 
@@ -34,17 +34,22 @@ def criar_conta():
         database.session.add(usuario)
         database.session.commit()
         login_user(usuario, remember=True)
-        return redirect(url_for("perfil", usuario=usuario.username))
+        return redirect(url_for("perfil", id_usuario=usuario.id))
     return render_template("criarconta.html", form=formcriarconta)
 
     
 
 
-@app.route('/perfil/<usuario>')
+@app.route('/perfil/<id_usuario>')
 @login_required
-def perfil(usuario):
-   return render_template('perfil.html', usuario=usuario)
-   
+def perfil(id_usuario):
+    if int(id_usuario) == current_user.id:
+        usuario = current_user
+    else:
+        usuario = Usuarios.query.get(int(id_usuario))
+        if usuario is None:
+            return "Usuário não encontrado", 404  # Tratamento de erro
+    return render_template('perfil.html', usuario=usuario)
 
 @app.route('/logout')
 @login_required
