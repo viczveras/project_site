@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, FileField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
 from fakeinterest.models import Usuarios
 
@@ -19,3 +19,8 @@ class Form_Criar_Conta(FlaskForm):
         usuario = Usuarios.query.filter_by(email=email.data).first()
         if usuario:
             raise ValidationError("E-mail já cadastrado.")
+        
+
+class Form_Foto(FlaskForm):
+    foto = FileField("Foto", validators=[DataRequired()])
+    botao_confirmacao = SubmitField("Enviar")
