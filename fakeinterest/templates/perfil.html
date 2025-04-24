@@ -1,34 +1,70 @@
-{% extends "index.html" %}
-{% block titulo %}
-Perfil do {{usuario}}
-{% endblock %}
-{% block body %}
-<body>
-    <h2>Perfil do usuário {{usuario.username}}</h2>
-{% if form %}
-<form method="POST" enctype="multipart/form-data">
-    {{ form.csrf_token }}
+{% extends "base.html" %}
 
-    {{ form.foto() }}
-    {{ form.botao_confirmacao() }}
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <h2>Perfil de {{ usuario.username }}</h2>
+        {% if form %}
+        <div class="form-container">
+            <form method="POST" enctype="multipart/form-data">
+                {{ form.csrf_token }}
+                <div class="form-group">
+                    {{ form.foto.label }}
+                    {{ form.foto(class="form-control") }}
+                </div>
+                <button type="submit" class="btn">Postar Foto</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
 
+    <div class="foto-grid">
+        {% for foto in usuario.fotos %}
+        <div class="foto-item">
+            <img src="{{ url_for('static', filename='fotos_posts/' + foto.imagem) }}" alt="Foto do usuário">
+        </div>
+        {% endfor %}
+    </div>
+</div>
 
-</form>
+<!-- Modal para visualização da imagem -->
+<div id="imageModal" class="modal">
+    <span class="modal-close">&times;</span>
+    <img class="modal-content" id="modalImg">
+</div>
 
+<script>
+    // Pegar o modal
+    const modal = document.getElementById("imageModal");
+    const modalImg = document.getElementById("modalImg");
+    const closeBtn = document.getElementsByClassName("modal-close")[0];
 
+    // Adicionar evento de clique em todas as imagens da grid
+    document.querySelectorAll('.foto-item img').forEach(img => {
+        img.onclick = function() {
+            modal.style.display = "block";
+            modalImg.src = this.src;
+        }
+    });
 
+    // Fechar o modal quando clicar no X
+    closeBtn.onclick = function() {
+        modal.style.display = "none";
+    }
 
-{% endif %}
+    // Fechar o modal quando clicar fora da imagem
+    modal.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    }
 
-
-
-<a href="{{url_for('logout')}}">Sair</a>
-
-
-{% for foto in usuario.fotos %}
-<img src="{{ url_for('static', filename='fotos_posts/' + foto.imagem) }}">
-{% endfor %}
-
-</body>
+    // Fechar o modal com a tecla ESC
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "Escape") {
+            modal.style.display = "none";
+        }
+    });
+</script>
 {% endblock %}
 

@@ -1,26 +1,23 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        {% block titulo %}
-        Vinterest
-        {% endblock %}
-    </title>
-</head>
-{% block body %}
-<body>
-    <h3>Olá, bem-vindo ao meu site!</h3>
+{% extends "base.html" %}
 
-{% block formulario %}
-<form method="POST" action="{{ url_for('home') }}">
-    {{ form.csrf_token }}
-    {{ form.email.label }} {{ form.email() }}
-    {{ form.senha.label }} {{ form.senha() }}
-    {{ form.confirm_button }}
-</form>
-    {% endblock %}
-</body>
+{% block content %}
+<div class="form-container">
+    <h2>Login</h2>
+    <form method="POST">
+        {{ form.csrf_token }}
+        <div class="form-group">
+            {{ form.email.label }}
+            {{ form.email(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.senha.label }}
+            {{ form.senha(class="form-control") }}
+        </div>
+        <button type="submit" class="btn">Entrar</button>
+    </form>
+    <p style="margin-top: 1rem; text-align: center;">
+        Não tem uma conta? <a href="{{ url_for('criar_conta') }}">Criar conta</a>
+    </p>
+</div>
 {% endblock %}
 </html>
